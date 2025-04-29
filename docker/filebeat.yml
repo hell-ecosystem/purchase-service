@@ -1,0 +1,17 @@
+filebeat.inputs:
+  - type: container
+    paths:
+      - /var/lib/docker/containers/*/*.log
+    json:
+      keys_under_root: true
+      add_error_key: true
+    multiline.pattern: '^{'
+    multiline.negate: true
+    multiline.match: after
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+  index: "purchase-logs-%{+yyyy.MM.dd}"
+  setup.template.name: "purchase-logs"
+  setup.template.pattern: "purchase-logs-*"
+  setup.ilm.enabled: false
